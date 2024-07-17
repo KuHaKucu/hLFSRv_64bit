@@ -1,0 +1,47 @@
+module generator_LFSR_64bit_tb;
+
+    // Signals for stimulating the UUT
+    reg i_clk = 0;
+    reg i_rst = 0;
+    reg [63:0] i_seed = 64'b0;
+    wire [63:0] o_lfsr;
+    wire o_keystream;
+
+    // Clock period definition
+    parameter clk_period = 5;
+
+    // Instantiate the Unit Under Test (UUT)
+    generator_LFSR_64bit #(.clk_n(8)) uut (
+        .i_clk(i_clk),
+        .i_rst(i_rst),
+        .i_seed(i_seed),
+        .o_lfsr(o_lfsr),
+        .o_keystream(o_keystream)
+    );
+
+    // Clock process definitions
+    always begin
+        i_clk = 0;
+        # (clk_period / 2);
+        i_clk = 1;
+        # (clk_period / 2);
+    end
+
+    // Stimulus process
+    initial begin
+        // Test Case 1: Apply reset and provide seed
+        #2;
+        i_rst = 1;
+        i_seed = 64'h1711200220ABCDEF; // Example seed
+        #5;
+        i_rst = 0;
+
+        // Test Case 2: Normal operation without reset
+        // #200;
+
+        // End simulation
+        #1000;  // Add a delay to observe the behavior
+        $stop;
+    end
+
+endmodule
